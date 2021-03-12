@@ -23,15 +23,21 @@ module Ram_1w_1rs #(
         output [rdDataWidth-1:0] rd_data
     );
 
-    reg [wrDataWidth-1:0] ram_block [(2**wrAddressWidth)-1:0];
+    //reg [wrDataWidth-1:0] ram_block [(2**wrAddressWidth)-1:0];
     integer i;
     localparam COL_WIDTH = wrDataWidth/wrMaskWidth;
+    reg [wrMaskWidth-1:0][COL_WIDTH-1:0] ram_block [(2**wrAddressWidth)-1:0];
     always @ (posedge wr_clk) begin
-        if(wr_en) begin
-            for(i=0;i<wrMaskWidth;i=i+1) begin
-                if(wr_mask[i]) begin
-                    ram_block[wr_addr][i*COL_WIDTH +: COL_WIDTH] <= wr_data[i*COL_WIDTH +:COL_WIDTH];
-                end
+        //if(wr_en) begin
+        //    for(i=0;i<wrMaskWidth;i=i+1) begin
+        //        if(wr_mask[i]) begin
+        //            ram_block[wr_addr][i*COL_WIDTH +: COL_WIDTH] <= wr_data[i*COL_WIDTH +:COL_WIDTH];
+        //        end
+        //    end
+        for (i=0;i<wrMaskWidth;i=i+1) begin
+            if(wr_en && wr_mask[i]) begin
+                //ram_block[wr_addr][i*COL_WIDTH +: COL_WIDTH] <= wr_data[i*COL_WIDTH +:COL_WIDTH];
+                ram_block[wr_addr][i] <= wr_data[i*COL_WIDTH +:COL_WIDTH];
             end
         end
     end
